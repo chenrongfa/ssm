@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+ <!-- 加载资源 -->
+ <context:component-scan base-package="com.yy.ssm">
+ <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+</context:component-scan>
+<!-- <mvc:default-servlet-handler/>
+<mvc:annotation-driven></mvc:annotation-driven> -->
+ <context:property-placeholder location="classpath:db.properties"/>
+ <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+ <property name="jdbcUrl" value="${jdbc.url}"></property>
+ <property name="driverClass" value="${jdbc.driver}"></property>
+ <property name="user" value="${jdbc.username}"></property>
+ <property name="password" value="${jdbc.password}"></property>
+ <property name="maxPoolSize" value="10"></property>
+ <property name="minPoolSize" value="3"></property>
+ </bean>
+<!--  <bean id="sqlSession" class="org.mybatis.spring.support.SqlSessionDaoSupport">
+ 	<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+ </bean> -->
+ <!-- 设置sqlsession -->
+  <bean id="sqlsession" class="org.mybatis.spring.SqlSessionTemplate">
+   <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+   <constructor-arg name="executorType" value="BATCH"></constructor-arg>
+  
+  </bean>
+ <!-- 配置sqlfactory -->
+ <bean  id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+  <property name="configLocation" value="classpath:mybatis.xml"></property>
+  <property name="dataSource" ref="dataSource"></property>
+  <property name="mapperLocations" value="classpath:mapping/*.xml"></property>
+ </bean>
+ <!-- mapper接口扫描 -->
+ <bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  <property name="basePackage" value="com.yy.ssm.dao"></property>
+ </bean>
+ <!-- 事务管理器 -->
+ <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+ 	<property name="dataSource" ref="dataSource"></property>
+ </bean>
+ <!-- 事务属性 -->
+ <tx:advice id="txManager" transaction-manager="transactionManager">
+   <tx:attributes>
+  	<tx:method name="get*" read-only="true"/> 
+  	<tx:method name="*" /> 
+   
+   </tx:attributes>
+ 
+ </tx:advice>
+ <!-- 事务于切点关联  -->
+ <aop:config>
+  <aop:pointcut expression="execution(* com.yy.ssm.service..*(..))" id="txPointcut"/>
+  <aop:advisor advice-ref="txManager" pointcut-ref="txPointcut"/>
+ </aop:config>
+ 
+</beans>
