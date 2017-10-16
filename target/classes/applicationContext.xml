@@ -13,12 +13,21 @@
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
  <!-- 加载资源 -->
- <context:component-scan base-package="com.yy.ssm">
- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-</context:component-scan>
+
 <!-- <mvc:default-servlet-handler/>
 <mvc:annotation-driven></mvc:annotation-driven> -->
- <context:property-placeholder location="classpath:db.properties"/>
+<!--  <context:property-placeholder    location="classpath:config/db.properties"/> -->
+	 <bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.properties</value>
+			</list>
+
+		</property>
+
+	</bean>
+ 
  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
  <property name="jdbcUrl" value="${jdbc.url}"></property>
  <property name="driverClass" value="${jdbc.driver}"></property>
@@ -37,10 +46,22 @@
   
   </bean>
  <!-- 配置sqlfactory -->
- <bean  id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-  <property name="configLocation" value="classpath:mybatis.xml"></property>
+ <bean  id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+  <property name="configLocation" value="classpath:mybatis-config.xml"></property>
   <property name="dataSource" ref="dataSource"></property>
   <property name="mapperLocations" value="classpath:mapping/*.xml"></property>
+  <property name="typeAliasesPackage" value="com.yy.ssm.bean"></property>
+  <property name="plugins">
+  		<array>
+  			<bean class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+  				<property name="dialectType" value="mysql"></property>
+  			
+  			</bean>
+  		
+  		
+  		</array>
+  
+  </property>
  </bean>
  <!-- mapper接口扫描 -->
  <bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
@@ -64,5 +85,6 @@
   <aop:pointcut expression="execution(* com.yy.ssm.service..*(..))" id="txPointcut"/>
   <aop:advisor advice-ref="txManager" pointcut-ref="txPointcut"/>
  </aop:config>
- 
+ 	<!-- 注入shiro -->
+ 	<import resource="classpath:spring-shiro.xml"/>
 </beans>

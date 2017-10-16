@@ -9,8 +9,8 @@ import com.yy.ssm.bean.Department;
 import com.yy.ssm.dao.DepartmentMapper;
 
 @Service
-public class DepartmentService {
-	@Autowired
+public class DepartmentService  {
+	@Autowired(required=false)
      private DepartmentMapper dept;
 	/**
 	 *  查询所有的部门

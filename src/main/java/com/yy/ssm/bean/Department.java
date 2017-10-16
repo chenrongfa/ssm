@@ -5,6 +5,7 @@ public class Department {
 		super();
 		this.deptId = deptId;
 		this.deptName = deptName;
+		
 	}
 
 	private Integer deptId;

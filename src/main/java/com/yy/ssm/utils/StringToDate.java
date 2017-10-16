@@ -10,7 +10,6 @@ import org.springframework.format.datetime.DateFormatter;
 
 public class StringToDate implements Converter<String, Date>{
 	
-	@Override
 	public Date convert(String source) {
 		// TODO Auto-generated method stub
 		DateFormatter date=new DateFormatter("yyyy-MM-dd");

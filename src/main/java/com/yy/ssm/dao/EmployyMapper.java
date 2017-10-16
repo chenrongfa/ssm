@@ -2,12 +2,13 @@ package com.yy.ssm.dao;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.yy.ssm.bean.Employy;
 
-public interface EmployyMapper {
+public interface EmployyMapper extends BaseMapper<Employy>{
 	int deleteByPrimaryKey(Integer empId);
 
-	int insert(Employy record);
+	Integer insert(Employy record);
 
 	int insertSelective(Employy record);
 

@@ -11,7 +11,7 @@ import com.yy.ssm.dao.EmployyMapper;
 
 @Service
 public class EmployyService {
-	@Autowired
+	@Autowired(required=false)
 	EmployyMapper emMapper;
 	@Autowired
 	SqlSession sqlsession;

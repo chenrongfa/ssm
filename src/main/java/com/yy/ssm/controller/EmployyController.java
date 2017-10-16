@@ -40,7 +40,7 @@ import com.yy.ssm.service.EmployyService;
 
 @Controller
 public class EmployyController {
-	@Autowired
+	@Autowired(required=false)
 	private EmployyService employyService;
 
 	/**

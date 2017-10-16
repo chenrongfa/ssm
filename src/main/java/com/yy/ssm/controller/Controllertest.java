@@ -10,10 +10,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yy.ssm.bean.Employy;
 import com.yy.ssm.service.EmployyService;
-@RequestMapping("/web")
-@Controller
+/*@RequestMapping("/web")
+@Controller*/
 public class Controllertest{
-	@Autowired
+	@Autowired(required=false)
 	EmployyService employyService;
 	@RequestMapping("/test")
     public String test1(Model moModel ){

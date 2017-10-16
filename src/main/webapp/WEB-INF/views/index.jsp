@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,11 +22,17 @@
 <%-- <script src="${webroot}/static/bootstrap-3.3.7-dist/js/modal.js"
 	type="text/javascript"></script> --%>
 
-<script src="${webroot }/jquery/index.js">
+<script src="${webroot}/jquery/index.js">
 	
 </script>
 </head>
 <body>
+<div class="user">
+  <span style="float:right; margin:10px;" >当前的用户:<span style="color:red ;font:2em"><shiro:principal property="loginName"></shiro:principal></span>
+  	<a href="${webroot}/logout"><button class="btn btn-success btn-sm">退出</button></a>
+  
+  </span>
+</div>
 	<div class="container">
 		<!-- 标题 -->
 		<div class="row">
@@ -38,7 +45,7 @@
 
 			<div class="col-md-4 col-md-offset-8 ">
 				<div class="center">
-
+					<shiro:hasRole  name="user" >
 					<button class="btn btn-success btn-sm" data-target="#addModal"
 						id="add_emp">
 						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>增加
@@ -47,6 +54,7 @@
 					<button class="btn btn-warning btn-sm" id="delete_Allbtn">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
 					</button>
+					</shiro:hasRole>
 				</div>
 			</div>
 

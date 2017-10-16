@@ -7,12 +7,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+
+
 public class Employy implements Serializable{
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+   
 	private Integer empId;
 	@Pattern(regexp="^[a-z0-9_-]*[\\u2E80-\\u9FFF]{2,16}$",message="格式错误:必须以字母开头两个汉字")
     private String empName;

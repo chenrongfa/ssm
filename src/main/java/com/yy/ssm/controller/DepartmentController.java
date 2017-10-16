@@ -15,7 +15,7 @@ import com.yy.ssm.service.DepartmentService;
 
 @Controller
 public class DepartmentController {
-	@Autowired
+	@Autowired(required=false)
 	private DepartmentService service;
 	@RequestMapping("dept-all")
 	@ResponseBody

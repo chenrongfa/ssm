@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="sessionManager" ref="sessionManager"></property>
+        <property name="cacheManager" ref="cacheManager"></property>
+        <property name="realm" ref="realm"></property>
+
+        <property name="rememberMeManager" ref="rememberMeManager"></property>
+    </bean>
+    <!-- 配置cookies -->
+    <bean id="rememberCookies" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"></constructor-arg>
+        <property name="httpOnly" value="true"></property>
+        <property name="maxAge" value="#{60*60*24}"></property>
+    </bean>
+<!--    配置记住我管理器-->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('6ZmI6I2j5Y+R5aSn5ZOlAA==')}"/>
+        <property name="cookie" ref="rememberCookies"/>
+    </bean>
+    <!-- 配置 realm  -->
+    <bean id="realm" class="com.yy.ssm.realm.ShiroRealm">
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"></property>
+                <property name="hashIterations" value="1024"></property>
+                <property name="hashSalted" value="true"></property>
+                <property name="storedCredentialsHexEncoded" value="true"></property>
+
+            </bean>
+        </property>
+
+
+    </bean>
+    <bean id="sessionManager"
+          class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionIdUrlRewritingEnabled" value="false"></property>
+    </bean>
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
+    </bean>
+
+    <!-- 配置spring 自动调用init destroy方法 -->
+    <bean id="lifeCycleProcesser" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+    <!-- 使用注解生效 -->
+    <bean
+            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+            depends-on="lifeCycleProcesser"/>
+    <bean
+            class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"></property>
+        <property name="loginUrl" value="login.jsp"></property>
+        <property name="successUrl" value="/WEB-INF/views/index.jsp"></property>
+
+        <property name="unauthorizedUrl" value="/WEB-INF/views/fail.jsp"></property>
+        <property name="filterChainDefinitions">
+            <value>
+                /login.jsp = anon
+                /css/*=anon
+                /login=anon
+                /logout=logout
+                /randomCode=anon
+                /add_user=anon
+                /emp-list=anon
+                /checkCode=anon
+                /register=anon
+                /register.jsp=anon
+                /images/*=anon
+                /jquery/*=anon
+                /static/**=anon
+                /**=authc
+            </value>
+        </property>
+    </bean>
+
+</beans>
